@@ -23,7 +23,7 @@ import javax.faces.bean.ApplicationScoped;
  */
 @ApplicationScoped
 public class Account {
-    private double balance = 0;
+    private double balance = 0.0;
     /**
      * Returns the current total balance of the account
      * @return - the balance
@@ -52,6 +52,6 @@ public class Account {
      * Deducts all cash from the total balance of the account
      */
     public void close() {
-        balance = 0;
+        balance = 0.0;
     }
 }

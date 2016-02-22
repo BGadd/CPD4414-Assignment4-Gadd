@@ -16,13 +16,47 @@
 
 package servlet;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import model.Account;
 
 /**
  * Provides an Account Balance and Basic Withdrawal/Deposit Operations
  */
 @WebServlet("/account")
 public class AccountServlet extends HttpServlet {
+    private Account account = new Account();
     
+    @Override
+    protected void doGet(HttpServletRequest req,
+            HttpServletResponse res){
+        
+        res.setHeader("Cache-Control", "private, no-store, no-cache, "
+                + "must-revalidate");
+        res.setHeader("Pragma", "no-cache");
+        res.setDateHeader("Expires", 0);
+        try (PrintWriter out = res.getWriter()) {
+            out.println(account.getBalance());
+        } catch (IOException ex) {
+            System.err.println("Something went wrong: " + ex.getMessage());
+        }
+    }
+    
+    @Override
+    public void doPost(HttpServletRequest req, HttpServletResponse res) {
+        String withdraw = req.getParameter("withdraw");
+        String deposit = req.getParameter("deposit");
+        String close = req.getParameter("close");
+        if (withdraw != null){
+            account.withdraw(Double.valueOf(withdraw));
+        } else if (deposit != null) {
+            account.deposit(Double.valueOf(deposit));
+        } else if (close != null && close.equals("true")) {
+            account.close();
+        }
+    }
 }
